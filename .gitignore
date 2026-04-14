@@ -1,0 +1,9 @@
+# No subir credenciales de DB
+config/db.php
+
+# No subir logs de error
+storage/logs/
+*.log
+
+# Opcional: No subir el config del FTP si el repo es público
+# .vscode/sftp.json
