@@ -1,6 +1,39 @@
-prueba commit
-2
-3
-4
-5
-6
+repositorio en github para control de versiones:
+
+https://github.com/maximoslu/WMS_1
+
+
+
+directorio ftp para pruebas: Directorio "/public/WMS" listado correctamente
+
+
+
+base de datos:
+
+Usuario
+
+ddb271932
+
+
+
+pass:
+
+Maximo2026
+
+
+
+Servidor BBDD
+
+bbdd.maximosl.com
+
+
+
+Versión MySQL
+
+MariaDB 11.8
+
+
+
+Nombre bbdd
+
+ddb271932
