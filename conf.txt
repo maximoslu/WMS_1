@@ -6,7 +6,7 @@ https://github.com/maximoslu/WMS_1
 
 directorio ftp para pruebas: Directorio "/public/WMS" listado correctamente
 
-
+*******************************bbdd
 
 base de datos:
 
