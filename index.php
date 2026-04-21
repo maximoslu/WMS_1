@@ -8,16 +8,14 @@ $error_message = $_GET['error'] ?? '';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WMS - Iniciar Sesión</title>
-    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- CSS Personalizado -->
     <link rel="stylesheet" href="public/css/main.css">
 </head>
 <body>
     <div class="login-container d-flex align-items-center justify-content-center min-vh-100">
         <div class="card login-card shadow-lg p-4 p-md-5">
             <div class="text-center mb-4">
-                <img src="public/assets/img/logo_empresa.png" alt="Logo Empresa" class="login-logo mb-3" onerror="this.src='https://via.placeholder.com/150?text=Logo+Empresa'">
+                <img src="assets/img/logo_empresa.png" alt="Logo Empresa" class="login-logo mb-3" onerror="this.src='https://via.placeholder.com/150?text=Logo+Empresa'">
                 <h4 class="mb-1 fw-bold">Acceso WMS</h4>
                 <p class="text-muted small">Por favor, ingrese sus credenciales</p>
             </div>
@@ -74,7 +72,6 @@ $error_message = $_GET['error'] ?? '';
       </div>
     </div>
 
-    <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         (function () {
