@@ -3,8 +3,8 @@ session_start();
 require_once 'config/db.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
-    $password = $_POST['password'] ?? '';
+    $email = trim($_POST['email'] ?? '');
+    $password = trim($_POST['password'] ?? '');
 
     if ($email && $password) {
         try {
@@ -13,13 +13,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->execute(['email' => $email]);
             $user = $stmt->fetch();
 
+            // Log de depuración (antes de la comparación, solo email)
+            error_log("Intento de login para email: " . $email);
+
             if ($user) {
-                // Validación combinada de password
-                $isPasswordValid = password_verify($password, $user['password']);
-                
-                // Fallback para pruebas con texto plano si el hash falla
-                if (!$isPasswordValid && $password === $user['password']) {
-                    $isPasswordValid = true; 
+                // Triple validación de contraseña
+                $isPasswordValid = false;
+                if (password_verify($password, $user['password'])) {
+                    $isPasswordValid = true;
+                } elseif ($password === $user['password']) {
+                    $isPasswordValid = true;
+                } elseif (md5($password) === $user['password']) {
+                    $isPasswordValid = true;
                 }
 
                 if ($isPasswordValid) {
@@ -31,21 +36,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $_SESSION['rol'] = $user['rol'];
                     $_SESSION['cliente_id'] = $user['cliente_id'] ?? null;
 
-                    // Redirección post-login
-                    $rol = $user['rol'];
-                    if ($rol === 'Cliente') {
-                        header('Location: cliente_view.php');
-                    } elseif (in_array($rol, ['SuperAdmin', 'Administracion', 'Almacen'])) {
-                        header('Location: dashboard.php');
-                    } else {
-                        // Resguardo por si hay otro rol no contemplado
-                        header('Location: dashboard.php');
-                    }
-                    exit;
+                    // Redirección directa
+                    header("Location: dashboard.php");
+                    exit();
                 } else {
+                    error_log("Error: Contraseña incorrecta");
                     $error = "Credenciales incorrectas.";
                 }
             } else {
+                error_log("Error: Usuario no encontrado en la tabla users");
                 $error = "Credenciales incorrectas.";
             }
         } catch (PDOException $e) {
