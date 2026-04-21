@@ -40,7 +40,7 @@ $cliente_id = $_SESSION['cliente_id'] ?? 0;
                     </div>
                 </div>
                 <div class="mt-3">
-                    <a href="articulos.php" class="text-decoration-none small text-primary fw-semibold">Ver catálogo <i class="bi bi-arrow-right"></i></a>
+                    <a href="stock.php" class="text-decoration-none small text-primary fw-semibold">Ver catálogo <i class="bi bi-arrow-right"></i></a>
                 </div>
             </div>
         </div>

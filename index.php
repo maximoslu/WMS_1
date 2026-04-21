@@ -47,8 +47,8 @@ $error_message = $_GET['error'] ?? '';
                 </div>
                 
                 <div class="d-flex justify-content-between mt-4 text-sm auth-links">
-                    <a href="#" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#infoModal">Recuperar contraseña</a>
-                    <a href="#" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#infoModal">Crear nuevo usuario</a>
+                    <a href="auth/recuperar.php" class="text-decoration-none"><i class="bi bi-key me-1"></i>Recuperar contraseña</a>
+                    <a href="auth/registro.php" class="text-decoration-none"><i class="bi bi-person-plus me-1"></i>Crear nuevo usuario</a>
                 </div>
             </form>
         </div>
