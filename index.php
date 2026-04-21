@@ -8,7 +8,7 @@ try {
     
     echo "<h1>WMS - Conexión Exitosa</h1>";
     echo "Servidor: " . $row['version'] . "<br>";
-    echo "Hora local: " . date('d-m-Y H:i:s') . "<br>";
+    echo "Hora local33: " . date('d-m-Y H:i:s') . "<br>";
     echo "Estado PHP: <span style='color:green'>OK</span>";
 
 } catch (Exception $e) {
