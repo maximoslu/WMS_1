@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 $reset_url = "https://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/reset_password.php?token=" . $token;
 
-                // Envío real via MailerController → Google Apps Script Webhook
+                // Envío real via MailerController (SMTP Directo)
                 require_once '../includes/MailerController.php';
                 $mailer = new MailerController();
 

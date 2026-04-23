@@ -41,29 +41,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Insertar usuario en estado 'pendiente' con todos los campos de la tabla
             $hash = password_hash($password, PASSWORD_BCRYPT);
+            $rol_defecto = 'Cliente';
             $ins  = $pdo->prepare("
                 INSERT INTO users (nombre, email, empresa, password, rol, cliente_id, estado)
-                VALUES (:nombre, :email, :empresa, :pass, 'Almacen', NULL, 'pendiente')
+                VALUES (:nombre, :email, :empresa, :pass, :rol, NULL, 'pendiente')
             ");
             $ins->execute([
                 ':nombre'  => $nombre,
                 ':email'   => $email,
-                ':empresa' => $empresa ?: null,   // NULL si no se informó
-                ':pass'    => $hash
+                ':empresa' => $empresa ?: null,
+                ':pass'    => $hash,
+                ':rol'     => $rol_defecto
             ]);
             $nuevo_user_id = $pdo->lastInsertId();
 
-            // Crear notificación para administradores
+            // Crear notificación para administradores (sin destinatario_rol ni url)
             $msg_notif = "Nuevo usuario pendiente de aprobación: <strong>" . htmlspecialchars($nombre) . "</strong> ({$email})";
-            $notif = $pdo->prepare("INSERT INTO notificaciones (destinatario_rol, mensaje, url) VALUES ('superadmin', :msg, '/admin/usuarios.php')");
+            $notif = $pdo->prepare("INSERT INTO notificaciones (mensaje) VALUES (:msg)");
             $notif->execute([':msg' => $msg_notif]);
 
             $pdo->commit();
 
-            // Notificar al SuperAdmin por email vía Apps Script Webhook
+            // Notificaciones por Email vía MailerController (SMTP)
+            $emailEnviado = true;
             try {
                 require_once '../includes/MailerController.php';
                 $mailer  = new MailerController();
+                
+                // 1. Notificar al SuperAdmin
                 $admStmt = $pdo->prepare("SELECT email, nombre FROM users WHERE rol = 'superadmin' AND estado = 'activo' LIMIT 1");
                 $admStmt->execute();
                 $admin = $admStmt->fetch(PDO::FETCH_ASSOC);
@@ -93,16 +98,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>";
                     $mailer->enviarCorreo($admin['email'], "WMS - Nueva solicitud de acceso: " . htmlspecialchars($nombre), $htmlAdmin);
                 }
-            } catch (Exception $mailerEx) {
-                error_log("[MailerController] Error notificando admin: " . $mailerEx->getMessage());
+
+                // 2. Enviar Bienvenida al Usuario (según nueva misión)
+                $asuntoUser = "Bienvenido a Máximo Servicios Logísticos";
+                $cuerpoUser = "Hola " . htmlspecialchars($nombre) . ", tu cuenta en nuestra plataforma interna ha sido solicitada. En breve un administrador revisará tu acceso. Atentamente, el equipo de Máximo.";
+                $mailer->enviarCorreo($email, $asuntoUser, $cuerpoUser);
+
+            } catch (\Throwable $mailerEx) {
+                $emailEnviado = false;
+                error_log("[MailerController] Error enviando emails: " . $mailerEx->getMessage());
             }
 
-            $mensaje = "Registro completado. Tu cuenta est&aacute; <strong>pendiente de aprobaci&oacute;n</strong> por un administrador.";
+            // Si la petición es AJAX (espera JSON)
+            if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest' || isset($_GET['json'])) {
+                header('Content-Type: application/json');
+                echo json_encode(["status" => "success", "message" => "Cuenta creada. Bienvenida enviada."]);
+                exit;
+            }
+
+            $mensaje = "Cuenta creada. Bienvenida enviada.";
             $tipo    = 'success';
 
         } catch (PDOException $e) {
             $pdo->rollBack();
             error_log("Error en registro.php: " . $e->getMessage());
+            
+            if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest' || isset($_GET['json'])) {
+                header('Content-Type: application/json');
+                echo json_encode(["status" => "error", "message" => "Error al crear la cuenta. Inténtalo más tarde."]);
+                exit;
+            }
+
             $mensaje = 'Error al crear la cuenta. Inténtalo más tarde.';
             $tipo    = 'danger';
         }

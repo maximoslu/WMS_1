@@ -56,11 +56,15 @@ $notif_count = 0;
 if ($isAdmin) {
     try {
         if (!isset($pdo)) require_once __DIR__ . '/../config/db.php';
-        $nstmt = $pdo->prepare("SELECT COUNT(*) FROM notificaciones WHERE destinatario_rol IN ('superadmin','administracion') AND leido = 0");
+        $nstmt = $pdo->prepare("SELECT COUNT(*) FROM notificaciones WHERE leido = 0");
         $nstmt->execute();
         $notif_count = (int)$nstmt->fetchColumn();
     } catch (Exception $e) { $notif_count = 0; }
 }
+
+// Determinar la ruta base para los enlaces (si estamos en admin/ o auth/, subir un nivel)
+$current_dir = dirname($_SERVER['PHP_SELF']);
+$basePath = (basename($current_dir) === 'admin' || basename($current_dir) === 'auth') ? '../' : './';
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -128,7 +132,7 @@ if ($isAdmin) {
 
 <nav class="navbar navbar-expand-lg navbar-dark navbar-custom shadow-lg sticky-top">
     <div class="container-fluid px-4">
-        <a class="navbar-brand d-flex align-items-center" href="dashboard.php">
+        <a class="navbar-brand d-flex align-items-center" href="<?= $basePath ?>dashboard.php">
             <i class="bi bi-grid-1x2-fill text-primary me-2 fs-3"></i>
             <span>PANEL DE <span class="text-primary">CONTROL</span></span>
         </a>
@@ -160,34 +164,34 @@ if ($isAdmin) {
 
                 <!-- Stock -->
                 <li class="nav-item">
-                    <a class="nav-link" href="stock.php"><i class="bi bi-box-seam me-1"></i> STOCK</a>
+                    <a class="nav-link" href="<?= $basePath ?>stock.php"><i class="bi bi-box-seam me-1"></i> STOCK</a>
                 </li>
 
                 <!-- Entrada -->
                 <?php if (!$isClienteAdmin): ?>
                 <li class="nav-item">
-                    <a class="nav-link" href="entradas.php"><i class="bi bi-box-arrow-in-down me-1"></i> Entrada</a>
+                    <a class="nav-link" href="<?= $basePath ?>entradas.php"><i class="bi bi-box-arrow-in-down me-1"></i> Entrada</a>
                 </li>
                 <?php endif; ?>
 
                 <!-- Salida -->
                 <?php if (!$isClienteAdmin): ?>
                 <li class="nav-item">
-                    <a class="nav-link" href="salidas.php"><i class="bi bi-box-arrow-up me-1"></i> Salida</a>
+                    <a class="nav-link" href="<?= $basePath ?>salidas.php"><i class="bi bi-box-arrow-up me-1"></i> Salida</a>
                 </li>
                 <?php endif; ?>
 
                 <!-- Etiquetar -->
                 <?php if (!$isClienteAdmin): ?>
                 <li class="nav-item">
-                    <a class="nav-link" href="etiquetar.php"><i class="bi bi-upc-scan me-1"></i> Etiquetar</a>
+                    <a class="nav-link" href="<?= $basePath ?>etiquetar.php"><i class="bi bi-upc-scan me-1"></i> Etiquetar</a>
                 </li>
                 <?php endif; ?>
 
                 <!-- Informes -->
                 <?php if ($isSuperAdmin || $isClienteAdmin): ?>
                 <li class="nav-item">
-                    <a class="nav-link" href="informes.php"><i class="bi bi-bar-chart-line me-1"></i> Informes</a>
+                    <a class="nav-link" href="<?= $basePath ?>informes.php"><i class="bi bi-bar-chart-line me-1"></i> Informes</a>
                 </li>
                 <?php endif; ?>
 
@@ -196,7 +200,7 @@ if ($isAdmin) {
             <div class="d-flex align-items-center gap-2">
                 <!-- Campana de notificaciones (solo admins) -->
                 <?php if ($isAdmin): ?>
-                <a href="admin/usuarios.php" class="btn btn-icon position-relative text-light" title="Solicitudes de acceso pendientes">
+                <a href="<?= $basePath ?>admin/usuarios.php" class="btn btn-icon position-relative text-light" title="Solicitudes de acceso pendientes">
                     <i class="bi bi-bell-fill fs-5"></i>
                     <?php if ($notif_count > 0): ?>
                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size:0.65rem;">
@@ -217,10 +221,10 @@ if ($isAdmin) {
                     <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark shadow">
                         <li><a class="dropdown-item" href="perfil.php"><i class="bi bi-person-circle me-2"></i>Perfil</a></li>
                         <?php if ($isAdmin): ?>
-                        <li><a class="dropdown-item" href="admin/usuarios.php"><i class="bi bi-people me-2"></i>Gestionar Usuarios</a></li>
+                        <li><a class="dropdown-item" href="<?= $basePath ?>admin/usuarios.php"><i class="bi bi-people me-2"></i>Gestionar Usuarios</a></li>
                         <?php endif; ?>
                         <li><hr class="dropdown-divider border-secondary"></li>
-                        <li><a class="dropdown-item text-danger" href="logout.php"><i class="bi bi-power me-2"></i>Cerrar Sesión</a></li>
+                        <li><a class="dropdown-item text-danger" href="<?= $basePath ?>auth/logout.php"><i class="bi bi-power me-2"></i>Cerrar Sesión</a></li>
                     </ul>
                 </div>
             </div>
