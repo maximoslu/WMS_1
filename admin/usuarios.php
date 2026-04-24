@@ -46,6 +46,7 @@ try {
 include '../includes/header.php';
 ?>
 
+
 <div class="container px-4">
     <div class="row mb-4 align-items-center">
         <div class="col">
@@ -79,31 +80,35 @@ include '../includes/header.php';
                         <?php foreach ($usuarios as $u): ?>
                         <tr>
                             <td class="ps-4">
-                                <div class="fw-bold"><?= htmlspecialchars($u['nombre']) ?></div>
-                                <div class="text-muted" style="font-size: 0.75rem;">ID: #<?= $u['id'] ?> &middot; <?= date('d/m/Y', strtotime($u['created_at'])) ?></div>
+                                <div class="fw-bold text-dark"><?= htmlspecialchars($u['nombre']) ?></div>
+                                <div class="user-id">ID: #<?= $u['id'] ?> &middot; <?= date('d/m/Y', strtotime($u['created_at'])) ?></div>
                             </td>
-                            <td class="small"><?= htmlspecialchars($u['email']) ?></td>
-                            <td><span class="badge bg-secondary-subtle text-secondary border"><?= htmlspecialchars($u['rol']) ?></span></td>
+                            <td class="small text-muted"><?= htmlspecialchars($u['email']) ?></td>
+                            <td><span class="badge bg-light text-secondary border-0 fw-normal" style="font-size: 0.75rem;"><?= htmlspecialchars($u['rol']) ?></span></td>
                             <td class="small text-muted"><?= htmlspecialchars($u['nombre_empresa'] ?? '—') ?></td>
                             <td class="text-center">
-                                <?php if ($u['estado'] === 'pendiente'): ?>
-                                    <span class="badge bg-warning-subtle text-warning border border-warning-subtle px-3 py-2">Pendiente</span>
-                                <?php elseif ($u['estado'] === 'activo'): ?>
-                                    <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2">Activo</span>
-                                <?php else: ?>
-                                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-3 py-2">Rechazado</span>
-                                <?php endif; ?>
+                                <div class="d-inline-flex align-items-center">
+                                    <?php if ($u['estado'] === 'pendiente'): ?>
+                                        <span class="status-dot dot-pending"></span><span class="status-text">Pendiente</span>
+                                    <?php elseif ($u['estado'] === 'activo'): ?>
+                                        <span class="status-dot dot-active"></span><span class="status-text">Activo</span>
+                                    <?php else: ?>
+                                        <span class="status-dot dot-rejected"></span><span class="status-text">Rechazado</span>
+                                    <?php endif; ?>
+                                </div>
                             </td>
                             <td class="text-center pe-4">
-                                <?php
-                                $id = $u['id'];
-                                if ($u['estado'] === 'pendiente') {
-                                    echo '<button class="btn btn-success" onclick="aprobar('.$id.')">Aprobar</button> ';
-                                }
-                                echo '<button class="btn btn-primary" onclick="editar('.$id.')">✏️</button> ';
-                                echo '<button class="btn btn-warning" onclick="clave('.$id.')">🔑</button> ';
-                                echo '<button class="btn btn-sm btn-danger" onclick="eliminarUsuario('.$id.')">🗑️ Borrar</button>';
-                                ?>
+                                <div class="d-flex gap-2 justify-content-center">
+                                    <?php
+                                    $id = $u['id'];
+                                    if ($u['estado'] === 'pendiente') {
+                                        echo '<button class="btn-quiet btn-quiet-approve" onclick="aprobar('.$id.')">Aprobar</button>';
+                                    }
+                                    echo '<button class="btn-quiet btn-quiet-edit" onclick="editar('.$id.')">✏️ Editar</button>';
+                                    echo '<button class="btn-quiet btn-quiet-key" onclick="clave('.$id.')">🔑 Clave</button>';
+                                    echo '<button class="btn-quiet btn-quiet-delete" onclick="eliminarUsuario('.$id.')">🗑️ Borrar</button>';
+                                    ?>
+                                </div>
                             </td>
                         </tr>
                         <?php endforeach; ?>

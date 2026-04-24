@@ -90,32 +90,53 @@ $basePath = (basename($current_dir) === 'admin' || basename($current_dir) === 'a
             color: #1e293b;
         }
         .navbar-custom {
-            background-color: var(--brand-dark);
+            background-color: #ffffff;
             padding: 0.75rem 1rem;
+            border-bottom: 1px solid #e9ecef;
         }
         .navbar-brand {
             font-weight: 700;
             letter-spacing: -0.025em;
+            color: #1e293b !important;
         }
         .nav-link {
             font-weight: 500;
-            color: rgba(255,255,255,0.85) !important;
+            color: #495057 !important;
+            transition: all 0.2s ease;
+            border-radius: 6px;
+            padding: 0.5rem 0.75rem !important;
+            margin: 0 0.1rem;
+        }
+        .nav-link:hover, .nav-link:focus {
+            color: #2f54eb !important;
+            background-color: #f0f5ff;
+        }
+        .dropdown-menu-saas {
+            background-color: #ffffff;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            padding: 0.5rem 0;
+            margin-top: 0.5rem;
+        }
+        .dropdown-menu-saas .dropdown-item {
+            color: #495057;
+            font-weight: 500;
+            font-size: 0.85rem;
+            padding: 0.5rem 1.5rem;
             transition: all 0.2s ease;
         }
-        .nav-link:hover {
-            color: #fff !important;
-            transform: translateY(-1px);
-        }
-        .dropdown-menu-dark {
-            background-color: #1e293b;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-        .dropdown-item:hover {
-            background-color: var(--brand-primary);
+        .dropdown-menu-saas .dropdown-item:hover {
+            background-color: #f0f5ff;
+            color: #2f54eb;
         }
         .user-avatar {
-            border: 2px solid var(--brand-primary);
+            border: 2px solid #e2e8f0;
             padding: 2px;
+            transition: border-color 0.2s;
+        }
+        .user-avatar:hover {
+            border-color: #3b82f6;
         }
         /* Dashboard Cards */
         .card-stat {
@@ -126,11 +147,70 @@ $basePath = (basename($current_dir) === 'admin' || basename($current_dir) === 'a
         .card-stat:hover {
             transform: translateY(-5px);
         }
+
+        /* Quiet Luxury UI - Paleta Neutra y Profesional */
+        .btn-quiet {
+            background: #f8f9fa !important;
+            color: #495057 !important;
+            border: 1px solid #dee2e6 !important;
+            border-radius: 6px !important;
+            padding: 6px 14px !important;
+            font-size: 0.75rem !important;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05) !important;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .btn-quiet:hover {
+            background: #ffffff !important;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.08) !important;
+            transform: translateY(-1px);
+        }
+
+        /* Hovers específicos */
+        .btn-quiet-approve:hover { background: #f6ffed !important; color: #389e0d !important; border-color: #b7eb8f !important; }
+        .btn-quiet-edit:hover { background: #e7f1ff !important; color: #0056b3 !important; border-color: #adc6ff !important; }
+        .btn-quiet-key:hover { background: #fff7e6 !important; color: #856404 !important; border-color: #fffb8f !important; }
+        .btn-quiet-delete:hover { background: #fff1f0 !important; color: #a44141 !important; border-color: #ffa39e !important; }
+
+        /* Indicadores de Estado (Dots) */
+        .status-dot {
+            height: 7px;
+            width: 7px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+        }
+        .dot-pending { background-color: #faad14; box-shadow: 0 0 0 2px rgba(250, 173, 20, 0.1); }
+        .dot-active { background-color: #52c41a; box-shadow: 0 0 0 2px rgba(82, 196, 26, 0.1); }
+        .dot-rejected { background-color: #f5222d; box-shadow: 0 0 0 2px rgba(245, 34, 45, 0.1); }
+
+        .status-text {
+            font-size: 0.8rem;
+            color: #6c757d;
+            font-weight: 500;
+            text-transform: capitalize;
+        }
+
+        /* Tipografía Refinada */
+        .user-id {
+            font-size: 0.65rem !important;
+            color: #adb5bd !important;
+            margin-top: 2px;
+            letter-spacing: 0.025em;
+        }
     </style>
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-dark navbar-custom shadow-lg sticky-top">
+<nav class="navbar navbar-expand-lg navbar-light navbar-custom shadow-sm sticky-top">
     <div class="container-fluid px-4">
         <a class="navbar-brand d-flex align-items-center" href="<?= $basePath ?>dashboard.php">
             <i class="bi bi-grid-1x2-fill text-primary me-2 fs-3"></i>
@@ -149,7 +229,7 @@ $basePath = (basename($current_dir) === 'admin' || basename($current_dir) === 'a
                     <a class="nav-link dropdown-toggle" href="#" id="dropAlmacen" role="button" data-bs-toggle="dropdown">
                         <i class="bi bi-house-gear me-1"></i> Almacén
                     </a>
-                    <ul class="dropdown-menu dropdown-menu-dark shadow">
+                    <ul class="dropdown-menu dropdown-menu-saas">
                         <?php if ($isSuperAdmin || $isOperario): ?>
                             <li><a class="dropdown-item" href="almacen_nuevo.php"><i class="bi bi-plus-lg me-2"></i>Nuevo</a></li>
                         <?php endif; ?>
@@ -161,6 +241,22 @@ $basePath = (basename($current_dir) === 'admin' || basename($current_dir) === 'a
                         <?php endif; ?>
                     </ul>
                 </li>
+
+                <!-- Clientes (Solo SuperAdmin) -->
+                <?php if ($isSuperAdmin): ?>
+                <li class="nav-item">
+                    <a class="nav-link" href="<?= $basePath ?>admin/clientes.php">
+                        <i class="bi bi-buildings me-1"></i> CLIENTES
+                    </a>
+                </li>
+
+                <!-- Familias (Solo SuperAdmin) -->
+                <li class="nav-item">
+                    <a class="nav-link" href="<?= $basePath ?>admin/familias.php">
+                        <i class="bi bi-tags me-1"></i> FAMILIAS
+                    </a>
+                </li>
+                <?php endif; ?>
 
                 <!-- Stock -->
                 <li class="nav-item">
@@ -200,7 +296,7 @@ $basePath = (basename($current_dir) === 'admin' || basename($current_dir) === 'a
             <div class="d-flex align-items-center gap-2">
                 <!-- Campana de notificaciones (solo admins) -->
                 <?php if ($isAdmin): ?>
-                <a href="<?= $basePath ?>admin/usuarios.php" class="btn btn-icon position-relative text-light" title="Solicitudes de acceso pendientes">
+                <a href="<?= $basePath ?>admin/usuarios.php" class="btn btn-icon position-relative text-secondary" title="Solicitudes de acceso pendientes">
                     <i class="bi bi-bell-fill fs-5"></i>
                     <?php if ($notif_count > 0): ?>
                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size:0.65rem;">
@@ -210,15 +306,15 @@ $basePath = (basename($current_dir) === 'admin' || basename($current_dir) === 'a
                 </a>
                 <?php endif; ?>
 
-                <div class="text-light me-1 d-none d-md-block text-end">
-                    <div class="small fw-semibold"><?= htmlspecialchars($_SESSION['nombre'] ?? 'Usuario') ?></div>
+                <div class="text-secondary me-2 d-none d-md-block text-end">
+                    <div class="small fw-semibold text-dark"><?= htmlspecialchars($_SESSION['nombre'] ?? 'Usuario') ?></div>
                     <div class="text-primary fw-bold" style="font-size: 0.70rem; text-transform: uppercase;"><?= htmlspecialchars($rol) ?></div>
                 </div>
                 <div class="dropdown">
-                    <a href="#" class="d-block link-light text-decoration-none dropdown-toggle" data-bs-toggle="dropdown">
-                        <img src="https://ui-avatars.com/api/?name=<?= urlencode($_SESSION['nombre'] ?? 'U') ?>&background=3b82f6&color=fff&bold=true" width="40" height="40" class="rounded-circle user-avatar">
+                    <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" data-bs-toggle="dropdown">
+                        <img src="https://ui-avatars.com/api/?name=<?= urlencode($_SESSION['nombre'] ?? 'U') ?>&background=e7f1ff&color=0056b3&bold=true" width="40" height="40" class="rounded-circle user-avatar">
                     </a>
-                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark shadow">
+                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-saas">
                         <li><a class="dropdown-item" href="perfil.php"><i class="bi bi-person-circle me-2"></i>Perfil</a></li>
                         <?php if ($isAdmin): ?>
                         <li><a class="dropdown-item" href="<?= $basePath ?>admin/usuarios.php"><i class="bi bi-people me-2"></i>Gestionar Usuarios</a></li>

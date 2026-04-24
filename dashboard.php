@@ -11,6 +11,13 @@ include 'includes/header.php';
 $nombre_usuario = $_SESSION['nombre'] ?? 'Operario';
 $rol = $_SESSION['rol'] ?? 'Invitado';
 $cliente_id = $_SESSION['cliente_id'] ?? 0;
+
+// Consultas para contadores
+$total_articulos = 0;
+try {
+    $stmtArt = $pdo->query("SELECT COUNT(*) FROM articulos");
+    $total_articulos = $stmtArt->fetchColumn();
+} catch (Exception $e) { $total_articulos = 0; }
 ?>
 
 <div class="container px-4">
@@ -36,7 +43,7 @@ $cliente_id = $_SESSION['cliente_id'] ?? 0;
                     </div>
                     <div class="flex-grow-1 ms-3">
                         <h6 class="text-muted mb-1">Artículos</h6>
-                        <h4 class="fw-bold mb-0">--</h4>
+                        <h4 class="fw-bold mb-0"><?= number_format($total_articulos) ?></h4>
                     </div>
                 </div>
                 <div class="mt-3">
