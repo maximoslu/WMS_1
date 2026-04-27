@@ -240,10 +240,10 @@ $basePath = (basename($current_dir) === 'admin' || basename($current_dir) === 'a
                     </a>
                 </li>
 
-                <!-- Familias (Solo SuperAdmin) -->
+                <!-- Artículos (Solo SuperAdmin) -->
                 <li class="nav-item">
-                    <a class="nav-link" href="<?= $basePath ?>admin/familias.php">
-                        <i class="bi bi-tags me-1"></i> FAMILIAS
+                    <a class="nav-link" href="<?= $basePath ?>admin/articulos_maestra.php">
+                        <i class="bi bi-box2-heart me-1"></i> ARTÍCULOS
                     </a>
                 </li>
                 <?php endif; ?>
@@ -277,7 +277,7 @@ $basePath = (basename($current_dir) === 'admin' || basename($current_dir) === 'a
                 <!-- Entrada -->
                 <?php if (!$isClienteAdmin): ?>
                 <li class="nav-item">
-                    <a class="nav-link" href="<?= $basePath ?>entradas.php"><i class="bi bi-box-arrow-in-down me-1"></i> Entrada</a>
+                    <a class="nav-link" href="<?= $basePath ?>admin/entradas.php"><i class="bi bi-box-arrow-in-down me-1"></i> Entrada</a>
                 </li>
                 <?php endif; ?>
 

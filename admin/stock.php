@@ -87,8 +87,19 @@ include '../includes/header.php';
 <!-- DataTables CSS -->
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
 <style>
-    /* Estética Minimalista y Quiet Luxury */
+    /* Estética Modern Dark */
     body { background-color: #f8fafc; }
+    .am-hero {
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        padding: 3rem 1rem 2.5rem;
+        text-align: center;
+        color: #fff;
+        border-radius: 0 0 28px 28px;
+        margin-bottom: 2rem;
+    }
+    .am-hero h1 { font-size: 1.6rem; font-weight: 700; letter-spacing: -.03em; margin-bottom: .25rem; }
+    .am-hero p  { color: #94a3b8; font-size: .85rem; margin-bottom: 0; }
+
     .table thead th { 
         background-color: transparent !important; 
         color: #94a3b8; 
@@ -140,39 +151,45 @@ include '../includes/header.php';
 
     /* KPI Card */
     .card-kpi {
-        background-color: #ffffff;
+        background-color: rgba(255, 255, 255, 0.1);
         border-radius: 12px;
-        border: 1px solid #e2e8f0;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        padding: 0.75rem 1.5rem;
     }
+    .card-kpi .label { color: #94a3b8; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+    .card-kpi .value { color: #fff; font-size: 1.5rem; font-weight: 700; }
 </style>
+
+<div class="am-hero">
+    <div class="container">
+        <?php if ($cliente_id === 0): ?>
+            <h1 class="mb-1"><i class="bi bi-box-seam me-2"></i>Panel Multicliente</h1>
+            <p class="mb-0">Seleccione un cliente para ver su inventario</p>
+        <?php else: ?>
+            <h1 class="mb-1"><i class="bi bi-box-seam me-2"></i><?= htmlspecialchars($nombre_cliente) ?></h1>
+            <p class="mb-3">Control de Stock y Desglose de Bultos</p>
+            
+            <div class="d-inline-block card-kpi text-start mt-2">
+                <div class="label">Total Pallets Estimados</div>
+                <div class="value"><?= number_format($total_pallets_sum, 0) ?></div>
+            </div>
+        <?php endif; ?>
+    </div>
+</div>
 
 <div class="container-fluid px-4">
     <?php if ($cliente_id === 0): ?>
-        <div class="row mt-5">
-            <div class="col-12 d-flex flex-column align-items-center justify-content-center" style="min-height: 400px;">
-                <div class="bg-white p-5 rounded-4 shadow-sm text-center border border-light">
+        <div class="row mt-2">
+            <div class="col-12 d-flex flex-column align-items-center justify-content-center" style="min-height: 300px;">
+                <div class="bg-white p-5 rounded-4 shadow-sm text-center border border-light w-100" style="max-width: 600px;">
                     <i class="bi bi-diagram-3 text-primary opacity-50 mb-3" style="font-size: 3rem;"></i>
                     <h4 class="fw-bold text-dark">Panel Multicliente</h4>
-                    <p class="text-muted mb-0">Seleccione un cliente del menú superior para visualizar su stock.</p>
+                    <p class="text-muted mb-0">Seleccione un cliente del menú superior <strong>"STOCK"</strong> para visualizar su inventario detallado.</p>
                 </div>
             </div>
         </div>
     <?php else: ?>
-        <div class="row mb-4 align-items-end">
-            <div class="col-md-8">
-                <h2 class="fw-bold mb-0 text-dark" style="letter-spacing: -0.02em;">
-                    <?= htmlspecialchars($nombre_cliente) ?>
-                </h2>
-                <p class="text-muted small mb-0 mt-1">Control de Stock y Desglose de Bultos</p>
-            </div>
-            <div class="col-md-4 text-md-end mt-3 mt-md-0">
-                <div class="card-kpi d-inline-block px-4 py-3 text-start">
-                    <div class="text-uppercase text-muted" style="font-size: 0.70rem; letter-spacing: 0.05em; font-weight: 700;">Total Pallets</div>
-                    <div class="fs-2 fw-bold text-dark mt-1 lh-1"><?= number_format($total_pallets_sum, 0) ?></div>
-                </div>
-            </div>
-        </div>
 
         <div class="card border-0 shadow-sm rounded-4">
             <div class="card-body p-4">

@@ -22,12 +22,29 @@ try {
 
 include '../includes/header.php';
 ?>
+<style>
+    .am-hero {
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        padding: 3rem 1rem 2.5rem;
+        text-align: center;
+        color: #fff;
+        border-radius: 0 0 28px 28px;
+        margin-bottom: 2rem;
+    }
+    .am-hero h1 { font-size: 1.6rem; font-weight: 700; letter-spacing: -.03em; margin-bottom: .25rem; }
+    .am-hero p  { color: #94a3b8; font-size: .85rem; margin-bottom: 0; }
+</style>
+
+<div class="am-hero">
+    <div class="container">
+        <h1><i class="bi bi-house-gear me-2"></i>Gestión de Almacenes</h1>
+        <p>Administra almacenes y sus ubicaciones.</p>
+    </div>
+</div>
 
 <div class="container-fluid px-4">
     <div class="row mb-4 align-items-center">
         <div class="col">
-            <h2 class="fw-bold mb-0"><i class="bi bi-house-gear text-primary me-2"></i>Gestión de Almacenes</h2>
-            <p class="text-muted small mb-0">Administra almacenes y sus ubicaciones.</p>
         </div>
     </div>
 

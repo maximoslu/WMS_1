@@ -1,6 +1,7 @@
 <?php
 /**
  * WMS_1 - Gestión de Clientes
+ * Estética: Modern Dark
  */
 require_once '../config/setup.php';
 require_once '../config/db.php';
@@ -21,12 +22,29 @@ try {
 
 include '../includes/header.php';
 ?>
+<style>
+    .am-hero {
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        padding: 3rem 1rem 2.5rem;
+        text-align: center;
+        color: #fff;
+        border-radius: 0 0 28px 28px;
+        margin-bottom: 2rem;
+    }
+    .am-hero h1 { font-size: 1.6rem; font-weight: 700; letter-spacing: -.03em; margin-bottom: .25rem; }
+    .am-hero p  { color: #94a3b8; font-size: .85rem; margin-bottom: 0; }
+</style>
+
+<div class="am-hero">
+    <div class="container">
+        <h1><i class="bi bi-buildings me-2"></i>Gestión de Clientes</h1>
+        <p>Administra el portafolio de clientes y su información de contacto.</p>
+    </div>
+</div>
 
 <div class="container px-4">
     <div class="row mb-4 align-items-center">
         <div class="col">
-            <h2 class="fw-bold mb-0"><i class="bi bi-buildings text-primary me-2"></i>Gestión de Clientes</h2>
-            <p class="text-muted small mb-0">Administra el portafolio de clientes y su información de contacto.</p>
         </div>
         <div class="col-auto">
             <button class="btn btn-primary rounded-3 fw-medium" data-bs-toggle="modal" data-bs-target="#modalCliente" onclick="prepararNuevo()">
