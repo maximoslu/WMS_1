@@ -58,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$isReadOnly) {
         'lote'          => $_POST['lote'] ?? null,
         'medida'        => $_POST['medida'] ?? 'Unidades',
         'paletizado_a'  => (int)($_POST['paletizado_a'] ?? 0),
-        'ean_upc'       => $_POST['ean_upc'] ?? '',
+        'estado'        => $_POST['estado'] ?? 'DISPONIBLE',
         'stock_minimo'  => $_POST['stock_minimo'] ?? 0
     ];
     
@@ -94,6 +94,9 @@ include 'includes/header.php';
     .status-ok { background-color: #dcfce7; color: #16a34a; }
     .badge-pallet { background-color: #dcfce7; color: #16a34a; border: 1px solid #bbf7d0; font-weight: 700; }
     .badge-pico { background-color: #fff7ed; color: #ea580c; border: 1px solid #ffedd5; font-weight: 700; }
+    .estado-disponible { background-color: #dcfce7; color: #16a34a; }
+    .estado-bloqueado { background-color: #fee2e2; color: #dc2626; }
+    .estado-obsoleto { background-color: #f1f5f9; color: #64748b; }
 </style>
 
 <div class="container px-4">
@@ -121,6 +124,7 @@ include 'includes/header.php';
                         <tr>
                             <th>SKU</th>
                             <th>Descripción</th>
+                            <th>Estado</th>
                             <th>Lote</th>
                             <th class="text-center">Total</th>
                             <th class="text-center">Medida</th>
@@ -139,6 +143,15 @@ include 'includes/header.php';
                         <tr>
                             <td class="fw-bold text-dark"><?= htmlspecialchars($art['sku']) ?></td>
                             <td><?= htmlspecialchars($art['descripcion']) ?></td>
+                            <td>
+                                <?php 
+                                    $estado = $art['estado'] ?? 'DISPONIBLE';
+                                    $estadoClass = 'estado-disponible';
+                                    if ($estado === 'BLOQUEADO') $estadoClass = 'estado-bloqueado';
+                                    if ($estado === 'OBSOLETO') $estadoClass = 'estado-obsoleto';
+                                ?>
+                                <span class="status-pill <?= $estadoClass ?>"><?= htmlspecialchars($estado) ?></span>
+                            </td>
                             <td class="text-muted small"><?= htmlspecialchars($art['lote'] ?? '-') ?></td>
                             <td class="text-center fw-bold"><?= number_format($total, 2) ?></td>
                             <td class="text-center small text-muted"><?= htmlspecialchars($art['medida']) ?></td>
@@ -215,8 +228,12 @@ include 'includes/header.php';
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label fw-semibold">EAN / UPC</label>
-                            <input type="text" name="ean_upc" id="art_ean" class="form-control rounded-3">
+                            <label class="form-label fw-semibold">Estado</label>
+                            <select name="estado" id="art_estado" class="form-select rounded-3">
+                                <option value="DISPONIBLE" selected>DISPONIBLE</option>
+                                <option value="BLOQUEADO">BLOQUEADO</option>
+                                <option value="OBSOLETO">OBSOLETO</option>
+                            </select>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Stock Mínimo Alerta</label>
@@ -279,7 +296,7 @@ function editArticulo(data) {
     $('#art_lote').val(data.lote);
     $('#art_medida').val(data.medida);
     $('#art_paletizado').val(data.paletizado_a);
-    $('#art_ean').val(data.ean_upc);
+    $('#art_estado').val(data.estado || 'DISPONIBLE');
     $('#art_min').val(data.stock_minimo);
     $('#articuloModal').modal('show');
 }

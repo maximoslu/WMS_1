@@ -54,7 +54,8 @@ class ArticuloController {
                             descripcion = :descripcion, 
                             lote = :lote,
                             medida = :medida,
-                            paletizado_a = :paletizado_a
+                            paletizado_a = :paletizado_a,
+                            estado = :estado
                         WHERE id = :id AND cliente_id = :cliente_id";
                 
                 $stmt = $this->pdo->prepare($sql);
@@ -64,14 +65,15 @@ class ArticuloController {
                     ':lote'         => $data['lote'],
                     ':medida'       => $data['medida'],
                     ':paletizado_a' => $data['paletizado_a'],
+                    ':estado'       => $data['estado'] ?? 'DISPONIBLE',
                     ':id'           => $data['id'],
                     ':cliente_id'   => $cid
                 ]);
                 return ['success' => true];
             } else {
                 // INSERT exacto según requerimiento final
-                $sql = "INSERT INTO articulos (cliente_id, sku, descripcion, lote, medida, paletizado_a, stock_actual) 
-                        VALUES (:cliente_id, :sku, :descripcion, :lote, :medida, :paletizado_a, 0)";
+                $sql = "INSERT INTO articulos (cliente_id, sku, descripcion, lote, medida, paletizado_a, stock_actual, estado) 
+                        VALUES (:cliente_id, :sku, :descripcion, :lote, :medida, :paletizado_a, 0, :estado)";
                 
                 $stmt = $this->pdo->prepare($sql);
                 $stmt->execute([
@@ -80,7 +82,8 @@ class ArticuloController {
                     ':descripcion'  => $data['descripcion'],
                     ':lote'         => $data['lote'],
                     ':medida'       => $data['medida'],
-                    ':paletizado_a' => $data['paletizado_a']
+                    ':paletizado_a' => $data['paletizado_a'],
+                    ':estado'       => $data['estado'] ?? 'DISPONIBLE'
                 ]);
                 return ['success' => true];
             }

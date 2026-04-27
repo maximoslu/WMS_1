@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$isReadOnly) {
         'cliente_id'    => $cliente_id,
         'sku'           => $_POST['sku'] ?? '',
         'descripcion'   => $_POST['descripcion'] ?? '',
-        'ean_upc'       => $_POST['ean_upc'] ?? '',
+        'estado'        => $_POST['estado'] ?? 'DISPONIBLE',
         'stock_minimo'  => $_POST['stock_minimo'] ?? 0
     ];
     
@@ -78,6 +78,9 @@ include 'includes/header.php';
     .status-pill { padding: 4px 12px; border-radius: 50px; font-size: 0.8rem; font-weight: 600; }
     .status-low { background-color: #fee2e2; color: #dc2626; }
     .status-ok { background-color: #dcfce7; color: #16a34a; }
+    .estado-disponible { background-color: #dcfce7; color: #16a34a; }
+    .estado-bloqueado { background-color: #fee2e2; color: #dc2626; }
+    .estado-obsoleto { background-color: #f1f5f9; color: #64748b; }
 </style>
 
 <div class="container px-4">
@@ -105,10 +108,10 @@ include 'includes/header.php';
                         <tr>
                             <th>SKU</th>
                             <th>Descripción</th>
-                            <th>EAN / UPC</th>
+                            <th>Estado</th>
                             <th class="text-center">Min.</th>
                             <th class="text-center">Stock Actual</th>
-                            <th class="text-center">Estado</th>
+                            <th class="text-center">Nivel Stock</th>
                             <th class="text-end">Acciones</th>
                         </tr>
                     </thead>
@@ -119,7 +122,15 @@ include 'includes/header.php';
                         <tr>
                             <td class="fw-bold text-dark"><?= htmlspecialchars($art['sku']) ?></td>
                             <td><?= htmlspecialchars($art['descripcion']) ?></td>
-                            <td class="text-muted small"><?= htmlspecialchars($art['ean_upc']) ?></td>
+                            <td>
+                                <?php 
+                                    $estado = $art['estado'] ?? 'DISPONIBLE';
+                                    $estadoClass = 'estado-disponible';
+                                    if ($estado === 'BLOQUEADO') $estadoClass = 'estado-bloqueado';
+                                    if ($estado === 'OBSOLETO') $estadoClass = 'estado-obsoleto';
+                                ?>
+                                <span class="status-pill <?= $estadoClass ?>"><?= htmlspecialchars($estado) ?></span>
+                            </td>
                             <td class="text-center"><?= number_format($art['stock_minimo'], 0) ?></td>
                             <td class="text-center fw-bold"><?= number_format($art['stock_actual'], 2) ?></td>
                             <td class="text-center">
@@ -175,8 +186,12 @@ include 'includes/header.php';
 
                     <div class="row">
                         <div class="col-md-7 mb-3">
-                            <label class="form-label fw-semibold">EAN / UPC (Barras)</label>
-                            <input type="text" name="ean_upc" id="art_ean" class="form-control rounded-3" placeholder="750123456789">
+                            <label class="form-label fw-semibold">Estado</label>
+                            <select name="estado" id="art_estado" class="form-select rounded-3">
+                                <option value="DISPONIBLE" selected>DISPONIBLE</option>
+                                <option value="BLOQUEADO">BLOQUEADO</option>
+                                <option value="OBSOLETO">OBSOLETO</option>
+                            </select>
                         </div>
                         <div class="col-md-5 mb-3">
                             <label class="form-label fw-semibold">Stock Mínimo</label>
@@ -238,7 +253,7 @@ function editArticulo(data) {
     $('#art_id').val(data.id);
     $('#art_sku').val(data.sku);
     $('#art_descripcion').val(data.descripcion);
-    $('#art_ean').val(data.ean_upc);
+    $('#art_estado').val(data.estado || 'DISPONIBLE');
     $('#art_min').val(data.stock_minimo);
     $('#articuloModal').modal('show');
 }

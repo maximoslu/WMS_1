@@ -224,24 +224,14 @@ $basePath = (basename($current_dir) === 'admin' || basename($current_dir) === 'a
         <div class="collapse navbar-collapse" id="navbarMain">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
                 
-                <!-- Almacén -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="dropAlmacen" role="button" data-bs-toggle="dropdown">
-                        <i class="bi bi-house-gear me-1"></i> Almacén
+                <!-- Almacenes -->
+                <?php if ($isSuperAdmin || $isOperario): ?>
+                <li class="nav-item">
+                    <a class="nav-link" href="<?= $basePath ?>admin/almacenes.php">
+                        <i class="bi bi-house-gear me-1"></i> ALMACENES
                     </a>
-                    <ul class="dropdown-menu dropdown-menu-saas">
-                        <?php if ($isSuperAdmin || $isOperario): ?>
-                            <li><a class="dropdown-item" href="almacen_nuevo.php"><i class="bi bi-plus-lg me-2"></i>Nuevo</a></li>
-                        <?php endif; ?>
-                        
-                        <li><a class="dropdown-item" href="ubicaciones.php"><i class="bi bi-search me-2"></i>Consulta</a></li>
-                        
-                        <?php if ($isSuperAdmin || $isOperario): ?>
-                            <li><a class="dropdown-item" href="almacen_editar.php"><i class="bi bi-pencil-square me-2"></i>Editar</a></li>
-                        <?php endif; ?>
-                    </ul>
                 </li>
-
+                <?php endif; ?>
                 <!-- Clientes (Solo SuperAdmin) -->
                 <?php if ($isSuperAdmin): ?>
                 <li class="nav-item">
@@ -258,10 +248,31 @@ $basePath = (basename($current_dir) === 'admin' || basename($current_dir) === 'a
                 </li>
                 <?php endif; ?>
 
-                <!-- Stock -->
-                <li class="nav-item">
-                    <a class="nav-link" href="<?= $basePath ?>stock.php"><i class="bi bi-box-seam me-1"></i> STOCK</a>
+                <!-- Stock (Multicliente) -->
+                <?php if ($isSuperAdmin || $isOperario): ?>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="dropStock" role="button" data-bs-toggle="dropdown">
+                        <i class="bi bi-box-seam me-1"></i> STOCK
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-saas" style="max-height: 300px; overflow-y: auto;">
+                        <?php 
+                        try {
+                            if (!isset($pdo)) require_once __DIR__ . '/../config/db.php';
+                            $stmt_clientes = $pdo->query("SELECT id, nombre_empresa FROM clientes ORDER BY nombre_empresa ASC");
+                            while ($row_cli = $stmt_clientes->fetch(PDO::FETCH_ASSOC)):
+                        ?>
+                            <li><a class="dropdown-item" href="<?= $basePath ?>admin/stock.php?cliente_id=<?= $row_cli['id'] ?>"><i class="bi bi-person me-2 text-secondary"></i><?= htmlspecialchars($row_cli['nombre_empresa']) ?></a></li>
+                        <?php 
+                            endwhile;
+                        } catch(Exception $e) {}
+                        ?>
+                    </ul>
                 </li>
+                <?php else: ?>
+                <li class="nav-item">
+                    <a class="nav-link" href="<?= $basePath ?>admin/stock.php?cliente_id=<?= $_SESSION['cliente_id'] ?? ($_SESSION['user_cliente_id'] ?? 0) ?>"><i class="bi bi-box-seam me-1"></i> STOCK</a>
+                </li>
+                <?php endif; ?>
 
                 <!-- Entrada -->
                 <?php if (!$isClienteAdmin): ?>
